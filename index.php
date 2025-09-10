@@ -99,7 +99,7 @@
         </div>
 
         <div class="caption" id="disclosure">
-  <small style="color:#000;font-weight:400;letter-spacing:.10px;">
+  <small style="color:#transparent;font-weight:400;letter-spacing:.10px;">
             En sélectionnant Suivant vous autorisez l’utilisation de votre e-mail pour l’authentification et le contrôle d’accès, conformément à notre notice de confidentialité.
           </small>
         </div>
