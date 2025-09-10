@@ -1,26 +1,10 @@
-# Use lightweight PHP + Apache image (serves HTML & PHP)
 FROM php:8.2-apache
-
-# Copy site files into Apache web root
+RUN a2enmod rewrite
+WORKDIR /var/www/html
 COPY . /var/www/html
-
-# Enable .htaccess + headers (for CORS) + rewrites
-RUN a2enmod rewrite headers
-
-# Allow .htaccess to work + prefer index.html first
-RUN printf "ServerName localhost\n" > /etc/apache2/conf-available/servername.conf \
- && a2enconf servername \
- && printf "DirectoryIndex index.html index.php\n" > /etc/apache2/conf-available/dirindex.conf \
- && a2enconf dirindex \
- && printf "<Directory /var/www/html>\n  AllowOverride All\n  Require all granted\n</Directory>\n" \
-      > /etc/apache2/conf-available/override.conf \
- && a2enconf override
-
-# (Optional) simple health endpoint for platforms
-RUN printf '%s\n' "<?php header('Content-Type: text/plain'); echo 'OK';" > /var/www/html/healthz.php
-
-# Tighten permissions
-RUN chown -R www-data:www-data /var/www/html
-
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && mkdir -p /var/www/html/.data /var/www/html/ogas
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 EXPOSE 80
 CMD ["apache2-foreground"]
